@@ -2,10 +2,8 @@ from pyshorteners import Shortener
 import feedparser
 from pprint import pprint
 from bs4 import BeautifulSoup
-
-food_url = "http://news.google.com/news?q=food+blockchain&hl=en-US&sort=date&gl=US&num=100&output=rss"
-agriculture_url = "http://news.google.com/news?q=agriculture+blockchain&hl=en-US&sort=date&gl=US&num=100&output=rss"
-
+# food_url = "http://news.google.com/news?q=food+blockchain&hl=en-US&sort=date&gl=US&num=100&output=rss"
+# agriculture_url = "http://news.google.com/news?q=agriculture+blockchain&hl=en-US&sort=date&gl=US&num=100&output=rss"
 
 class ParseFeed():
 
@@ -26,6 +24,7 @@ class ParseFeed():
         Parse the URL, and print all the details of the news
         '''
         feeds = feedparser.parse(self.feed_url).entries
+        feders = {"Title": [], "Description": [], "Url": [], "PubDate": []}
         for f in feeds:
             pprint({
                 'Description': self.clean(f.get("description", "")),
@@ -35,22 +34,23 @@ class ParseFeed():
             })
 
 
-feed = ParseFeed(food_url)
-feed.parse()
-# #create the df
-# food = result_words("Food Blockchain")
-# agriculture = result_words("Agriculture Blockchain")
-# #col of interest
-# col_list = ["title", "link"]
-# #df cleaning
-# df_diff = pd.concat([food, agriculture]).drop_duplicates(keep=False)
-# df_diff = df_diff[col_list]
-#reduce the link size
+def url_parsing():
+    url_list = ["http://news.google.com/news?q=food+blockchain&hl=en-US&sort=date&gl=US&num=100&output=rss",
+                "http://news.google.com/news?q=agriculture+blockchain&hl=en-US&sort=date&gl=US&num=100&output=rss"]
+    for link in url_list:
+        feed = ParseFeed(link)
+        link_dictionary = feed.parse().__dict__
+    return link_dictionary
+
+
+print(url_parsing())
+
+# for t in feed.parse():
+#     print (t)
 API_KEY = "8d3dc08c8a0d27a88e41a46b14b8c9106fc939c4"
 API_USER = "cavatrendy"
 
 s = Shortener(api_key=API_KEY)
-
 
 # for l in df_diff.get("link"):
 #     try:
