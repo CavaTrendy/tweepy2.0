@@ -2,6 +2,7 @@ from pyshorteners import Shortener
 import feedparser
 from bs4 import BeautifulSoup
 from datetime import datetime
+import pytz
 
 API_KEY = "8d3dc08c8a0d27a88e41a46b14b8c9106fc939c4"
 API_USER = "cavatrendy"
@@ -43,16 +44,37 @@ class ParseFeed():
 
 feed = ParseFeed("http://news.google.com/news?q=food+blockchain&hl=en-US&sort=date&gl=US&num=100&output=rss")
 link_dictionary = feed.parse()
-date_obj = datetime.today().strftime("%a, %d %b %Y %H:%M:%Scapi")
-##'Fri, 07 May 2021 07:00:00 GMT')
 
-print(date_obj)
+
 
 for data in link_dictionary:
-    for a in data.items():
-        print(a)
+    ###imposto la timezone gmt
+    tz_GMT = pytz.timezone('GMT')
+    date_obj = datetime.now(tz_GMT).strftime("%a, %d %b %Y %H:%M:%S")
+    ##pulisco la data di input
+    strip_gmt = data["PUBDATE"].rstrip(" GMT")
+    # setto uguale le date
+    data_pub = datetime.strptime(strip_gmt, "%a, %d %b %Y %H:%M:%S")
+    new_date = datetime.strptime(date_obj, "%a, %d %b %Y %H:%M:%S")
+    # creo il dizionario per i dati
+    new_dictionary = {"TITLE": [], "URL": [], "DESCR": [], "PUBDATE": []}
+    # setto la paramatrizzione
+    # print((new_date - data_pub).days)
+    print((data_pub - new_date ).days)
+    if (data_pub - new_date ).days < 7 :
+        print("superiorie " + str(data_pub))
+        new_dictionary["TITLE"].append(data["TITLE"])
+        new_dictionary["URL"].append(data["URL"])
+        new_dictionary["DESCR"].append(data["DESCR"])
+        new_dictionary["PUBDATE"].append(data["PUBDATE"])
 
+    else:
+        print("inferiore")
 
+publish_data = [{"TITLE": s, "URL": t, "DESCR": e, "PUBDATE": l} for s, t, e, l in
+            zip(new_dictionary["TITLE"], new_dictionary["URL"], new_dictionary["DESCR"], new_dictionary["PUBDATE"])]
+
+print(publish_data)
 
 
 
