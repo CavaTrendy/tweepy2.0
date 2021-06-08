@@ -1,14 +1,12 @@
 import feedparser
 from bs4 import BeautifulSoup
-from datetime import datetime
-import pytz
+import datetime
 from operator import itemgetter
 from pyshorteners import Shortener
-import pandas as pd
 
 API_KEY = "8d3dc08c8a0d27a88e41a46b14b8c9106fc939c4"
 API_USER = "cavatrendy"
-
+date_obj = datetime.datetime.now()
 s = Shortener(api_key=API_KEY)
 
 
@@ -77,37 +75,86 @@ class TweetPreparion(ParseFeed):
         return publish_data
 
     def creating_data(self):
-        dict_input = {"TITLE": [], "URL": [], "PUBDATE": []}
+        dict_input = {"TITLE": [], "URL": [], "HASTAG": [], "PUBDATE": []}
         students = ['Agric', 'Agriculture', 'Food', 'AGRIC', 'AGRICULTURE', 'FOOD', 'agric', 'agricultre', 'food']
         for i in self.cleaning_link():
             for j in students:
                 if j in i["TITLE"]:
                     dict_input["TITLE"].append(i["TITLE"])
                     dict_input["URL"].append(i["URL"])
+                    dict_input["HASTAG"].append("#foodtech #agritech #blockchain #innovation")
                     dict_input["PUBDATE"].append(i["PUBDATE"])
 
-        final_data = sorted([{"TITLE": s, "URL": t, "PUBDATE": l} for s, t, l in
-                               zip(dict_input["TITLE"], dict_input["URL"], dict_input["PUBDATE"])],
+        final_data = sorted([{"TITLE": s, "URL": t, "HASTAG": l, "PUBDATE": p} for s, t, l,p in
+                               zip(dict_input["TITLE"], dict_input["URL"], dict_input["HASTAG"], dict_input["PUBDATE"])],
                               key=itemgetter('PUBDATE'), reverse=True)
         return final_data
 
 
 feed_food = TweetPreparion("https://news.google.com/rss/search?q=food+blockchain+agriculture+blockchain+when:1d&hl=en-US&gl=US&ceid=US:en")
 link_food = feed_food.creating_data()
-print(link_food)
 
-def twitter_message(title, url):
-    hashtag = "#foodtech #agritech #blockchain #innovation"
-    print("Creating message for " + title + url + " " + hashtag)
-    create_mesage = f"{title} at {s.bitly.short(url)} {hashtag}"
+# class TweetText():
+#
+#     # def __init__(self, title, url, hashtag):
+#     #     self.title = title
+#     #     self.url = url
+#     #     self.hashtag = hashtag
+#
+#     def twitter_message(self,  title, url, hashtag):
+#         print("Creating message for ", self.title , self.url , self.hashtag)
+#         # create_mesage = f"{self.title} at {s.bitly.short(self.url)} {self.hashtag}"
+#         create_mesage = f"{self.title} at {self.url} {self.hashtag}"
+#         if len(create_mesage) >= 281:
+#             print("to loong" , len(create_mesage))
+#         else:
+#             create_mesage
+#         return create_mesage
+#
+#     def twitter_dict (self):
+#         dict_publish = {"TITLE": [],  "PUBDATE": []}
+#         hours = 0
+#         for a in link_food:
+#             hours +=1
+#
+#             add_time = datetime.timedelta(hours=hours)
+#             new_time = date_obj + add_time
+#             time_to_publish = datetime.datetime.strftime(new_time, "%H:%M:%S")
+#             dict_publish["TITLE"].append(self.twitter_message((a["TITLE"], a["URL"], a["HASTAG"])))
+#             dict_publish["PUBDATE"].append(time_to_publish)
+#         #
+#         final_publish = sorted([{"TITLE": s, "PUBDATE": t} for s, t in
+#                              zip(dict_publish["TITLE"], dict_publish["PUBDATE"])],
+#                             key=itemgetter('PUBDATE'), reverse=False)
+#         return  final_publish
+
+
+def twitter_message(title, url, hashtag):
+    print("Creating message for ",title, url, hashtag)
+    # create_mesage = f"{self.title} at {s.bitly.short(self.url)} {self.hashtag}"
+    create_mesage = f"{title} at {url} {hashtag}"
     if len(create_mesage) >= 281:
-        print("to loong" + len(create_mesage))
+        print("to loong", len(create_mesage))
     else:
         create_mesage
     return create_mesage
 
-for a in link_food:
-    print(a)
-    print(a["TITLE"])
 
+def twitter_dict():
+    dict_publish = {"TITLE": [], "PUBDATE": []}
+    hours = 30
+    for a in link_food:
+        hours += 30
 
+        add_time = datetime.timedelta(minutes =hours)
+        new_time = date_obj + add_time
+        time_to_publish = datetime.datetime.strftime(new_time, "%H:%M:%S")
+        dict_publish["TITLE"].append(twitter_message(a["TITLE"], a["URL"], a["HASTAG"]))
+        dict_publish["PUBDATE"].append(time_to_publish)
+    #
+    final_publish = sorted([{"TITLE": s, "PUBDATE": t} for s, t in
+                            zip(dict_publish["TITLE"], dict_publish["PUBDATE"])],
+                           key=itemgetter('PUBDATE'), reverse=False)
+    return final_publish
+
+print(twitter_dict())
