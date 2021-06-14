@@ -158,3 +158,5 @@ def twitter_dict():
     return final_publish
 
 print(twitter_dict())
+###gira una volta al giorno va su un database salve il dict e dice che se e' pubblicato. CLOUD FUNCATION
+##o pubsub[tipo canale in cui elabori il messaggio]
