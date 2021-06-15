@@ -3,9 +3,10 @@ from bs4 import BeautifulSoup
 import datetime
 from operator import itemgetter
 from pyshorteners import Shortener
+import os
 
-API_KEY = "8d3dc08c8a0d27a88e41a46b14b8c9106fc939c4"
-API_USER = "cavatrendy"
+API_KEY = os.getenv("API_KEY_BITLY")
+API_USER = os.getenv("API_USER_BITLY")
 date_obj = datetime.datetime.now()
 s = Shortener(api_key=API_KEY)
 
