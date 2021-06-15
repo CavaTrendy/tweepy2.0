@@ -132,8 +132,8 @@ link_food = feed_food.creating_data()
 
 def twitter_message(title, url, hashtag):
     print("Creating message for ",title, url, hashtag)
-    # create_mesage = f"{self.title} at {s.bitly.short(self.url)} {self.hashtag}"
-    create_mesage = f"{title} at {url} {hashtag}"
+    create_mesage = f"{title} at {s.bitly.short(url)} {hashtag}"
+    ##create_mesage = f"{title} at {url} {hashtag}"
     if len(create_mesage) >= 281:
         print("to loong", len(create_mesage))
     else:
