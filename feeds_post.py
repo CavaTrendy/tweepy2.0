@@ -46,11 +46,9 @@ class TweetPreparion(ParseFeed):
 
     def __init__(self, url):
         super().__init__(url)
-        # self.feed_dict = dict
 
     def cleaning_link(self):
         new_dictionary = {"TITLE": [], "URL": [], "PUBDATE": []}
-        # dictionary = self.feed_dict
         for data in ParseFeed.parse(self):
             # ###imposto la timezone gmt
             # tz_GMT = pytz.timezone('GMT')
