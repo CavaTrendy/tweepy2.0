@@ -6,9 +6,10 @@ from pyshorteners import Shortener
 import os
 
 API_KEY = os.getenv("API_KEY_BITLY")
+API_TINY = os.getenv("API_KEY TINY")
 API_USER = os.getenv("API_USER_BITLY")
 date_obj = datetime.datetime.now()
-s = Shortener(api_key=API_KEY)
+s = Shortener(api_key= API_TINY)
 
 
 class ParseFeed():
@@ -55,7 +56,7 @@ class TweetPreparion(ParseFeed):
             # tz_GMT = pytz.timezone('GMT')
             # date_obj = datetime.now(tz_GMT).strftime("%a, %d %b %Y %H:%M:%S")
             # ##pulisco la data di input
-            # strip_gmt = data["PUBDATE"].rstrip(" GMT")
+            # # strip_gmt = data["PUBDATE"].rstrip(" GMT")
             # # setto uguale le date
             # data_pub = datetime.strptime(strip_gmt, "%a, %d %b %Y %H:%M:%S")
             # new_date = datetime.strptime(date_obj, "%a, %d %b %Y %H:%M:%S")
@@ -132,7 +133,7 @@ link_food = feed_food.creating_data()
 
 def twitter_message(title, url, hashtag):
     print("Creating message for ",title, url, hashtag)
-    create_mesage = f"{title} at {s.bitly.short(url)} {hashtag}"
+    create_mesage = f"{title} at {s.tinyurl.short(url)} {hashtag}"
     ##create_mesage = f"{title} at {url} {hashtag}"
     if len(create_mesage) >= 281:
         print("to loong", len(create_mesage))
