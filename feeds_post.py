@@ -96,41 +96,6 @@ class TweetPreparion(ParseFeed):
 feed_food = TweetPreparion("https://news.google.com/rss/search?q=food+blockchain+agriculture+blockchain+when:1d&hl=en-US&gl=US&ceid=US:en")
 link_food = feed_food.creating_data()
 
-# class TweetText():
-#
-#     # def __init__(self, title, url, hashtag):
-#     #     self.title = title
-#     #     self.url = url
-#     #     self.hashtag = hashtag
-#
-#     def twitter_message(self,  title, url, hashtag):
-#         print("Creating message for ", self.title , self.url , self.hashtag)
-#         # create_mesage = f"{self.title} at {s.bitly.short(self.url)} {self.hashtag}"
-#         create_mesage = f"{self.title} at {self.url} {self.hashtag}"
-#         if len(create_mesage) >= 281:
-#             print("to loong" , len(create_mesage))
-#         else:
-#             create_mesage
-#         return create_mesage
-#
-#     def twitter_dict (self):
-#         dict_publish = {"TITLE": [],  "PUBDATE": []}
-#         hours = 0
-#         for a in link_food:
-#             hours +=1
-#
-#             add_time = datetime.timedelta(hours=hours)
-#             new_time = date_obj + add_time
-#             time_to_publish = datetime.datetime.strftime(new_time, "%H:%M:%S")
-#             dict_publish["TITLE"].append(self.twitter_message((a["TITLE"], a["URL"], a["HASTAG"])))
-#             dict_publish["PUBDATE"].append(time_to_publish)
-#         #
-#         final_publish = sorted([{"TITLE": s, "PUBDATE": t} for s, t in
-#                              zip(dict_publish["TITLE"], dict_publish["PUBDATE"])],
-#                             key=itemgetter('PUBDATE'), reverse=False)
-#         return  final_publish
-
-
 def twitter_message(title, url, hashtag):
     print("Creating message for ",title, url, hashtag)
     create_mesage = f"{title} at {s.tinyurl.short(url)} {hashtag}"
@@ -153,7 +118,6 @@ def twitter_dict():
         time_to_publish = datetime.datetime.strftime(new_time, "%H:%M:%S")
         dict_publish["TITLE"].append(twitter_message(a["TITLE"], a["URL"], a["HASTAG"]))
         dict_publish["PUBDATE"].append(time_to_publish)
-    #
     final_publish = sorted([{"TITLE": s, "PUBDATE": t} for s, t in
                             zip(dict_publish["TITLE"], dict_publish["PUBDATE"])],
                            key=itemgetter('PUBDATE'), reverse=False)
