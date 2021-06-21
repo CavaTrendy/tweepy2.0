@@ -5,9 +5,8 @@ from operator import itemgetter
 from pyshorteners import Shortener
 import os
 
-API_KEY = os.getenv("API_KEY_BITLY")
-API_TINY = os.getenv("API_KEY TINY")
-API_USER = os.getenv("API_USER_BITLY")
+API_TINY = os.getenv("API_KEY_TINY")
+
 date_obj = datetime.datetime.now()
 s = Shortener(api_key= API_TINY)
 
@@ -91,8 +90,8 @@ class TweetPreparion(ParseFeed):
         return final_data
 
 
-feed_food = TweetPreparion("https://news.google.com/rss/search?q=food+blockchain+agriculture+blockchain+when:1d&hl=en-US&gl=US&ceid=US:en")
-link_food = feed_food.creating_data()
+# feed_food = TweetPreparion("https://news.google.com/rss/search?q=food+blockchain+agriculture+blockchain+when:1d&hl=en-US&gl=US&ceid=US:en")
+# link_food = feed_food.creating_data()
 
 def twitter_message(title, url, hashtag):
     print("Creating message for ",title, url, hashtag)
@@ -105,10 +104,10 @@ def twitter_message(title, url, hashtag):
     return create_mesage
 
 
-def twitter_dict():
+def twitter_dict(dictionary):
     dict_publish = {"TITLE": [], "PUBDATE": []}
     hours = 30
-    for a in link_food:
+    for a in dictionary:
         hours += 30
 
         add_time = datetime.timedelta(minutes =hours)
@@ -121,6 +120,14 @@ def twitter_dict():
                            key=itemgetter('PUBDATE'), reverse=False)
     return final_publish
 
-print(twitter_dict())
-###gira una volta al giorno va su un database salve il dict e dice che se e' pubblicato. CLOUD FUNCATION
-##o pubsub[tipo canale in cui elabori il messaggio]
+
+def main():
+    feed_food = TweetPreparion(
+        "https://news.google.com/rss/search?q=food+blockchain+agriculture+blockchain+when:1d&hl=en-US&gl=US&ceid=US:en")
+    link_food = feed_food.creating_data()
+    twitter_dict(link_food)
+    print(twitter_dict(link_food))
+
+
+if __name__ == '__main__':
+    main()
