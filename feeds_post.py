@@ -10,6 +10,19 @@ API_TINY = os.getenv("API_KEY_TINY")
 date_obj = datetime.datetime.now()
 s = Shortener(api_key= API_TINY)
 
+def twitter_message(title, url, hashtag):
+    # print("Creating message for ", title, url, hashtag)
+    message = f"{title} at {s.tinyurl.short(url)} {hashtag}"
+
+    if len(title) >= 200:
+        title_redux = title[:150]
+        print("title_redux")
+        # create_mesage = f"{title_redux} at {s.tinyurl.short(url)} {hashtag}"
+        message = f"{title_redux} at {s.tinyurl.short(url)} {hashtag}"
+        print(message)
+    else:
+        message
+    return message
 
 class ParseFeed():
 
@@ -90,35 +103,58 @@ class TweetPreparion(ParseFeed):
         return final_data
 
 
-# feed_food = TweetPreparion("https://news.google.com/rss/search?q=food+blockchain+agriculture+blockchain+when:1d&hl=en-US&gl=US&ceid=US:en")
-# link_food = feed_food.creating_data()
+    def cleaning_double(self):
+        dict_output = {"TITLE": [], "URL": [], "HASTAG": [], "PUBDATE": []}
+        for link in self.creating_data():
+            print(link["TITLE"])
+            if link["TITLE"] not in dict_output["TITLE"]:
+                dict_output["TITLE"].append(link["TITLE"])
+                dict_output["URL"].append(link["URL"])
+                dict_output["HASTAG"].append(link["HASTAG"])
+                dict_output["PUBDATE"].append(link["PUBDATE"])
 
-def twitter_message(title, url, hashtag):
-    print("Creating message for ",title, url, hashtag)
-    create_mesage = f"{title} at {s.tinyurl.short(url)} {hashtag}"
-    ##create_mesage = f"{title} at {url} {hashtag}"
-    if len(create_mesage) >= 281:
-        print("to loong", len(create_mesage))
-    else:
-        create_mesage
-    return create_mesage
+        final_output = sorted([{"TITLE": s, "URL": t, "HASTAG": l, "PUBDATE": p} for s, t, l, p in
+                             zip(dict_output["TITLE"], dict_output["URL"], dict_output["HASTAG"], dict_output["PUBDATE"])],
+                            key=itemgetter('PUBDATE'), reverse=True)
+        return final_output
 
 
-def twitter_dict(dictionary):
-    dict_publish = {"TITLE": [], "PUBDATE": [], "REALPUBDATE":[]}
-    hours = 30
-    for a in dictionary:
-        hours += 30
 
-        add_time = datetime.timedelta(minutes =hours)
-        new_time = date_obj + add_time
-        time_to_publish = datetime.datetime.strftime(new_time, "%H:%M:%S")
-        dict_publish["TITLE"].append(twitter_message(a["TITLE"], a["URL"], a["HASTAG"]))
-        dict_publish["PUBDATE"].append(time_to_publish)
-    final_publish = sorted([{"TITLE": s, "PUBDATE": t} for s, t in
-                            zip(dict_publish["TITLE"], dict_publish["PUBDATE"])],
-                           key=itemgetter('PUBDATE'), reverse=False)
-    return final_publish
+feed_food = TweetPreparion("https://news.google.com/rss/search?q=food+blockchain+agriculture+blockchain+when:1d&hl=en-US&gl=US&ceid=US:en")
+link_food = feed_food.creating_data()
+link = feed_food.cleaning_double()
+print(link)
+print(link_food)
+# dict_output = {"TITLE": [], "URL": [], "HASTAG": [], "PUBDATE": []}
+# for link in link_food:
+#     print(link["TITLE"])
+#     if link["TITLE"] not in dict_output["TITLE"]:
+#         dict_output["TITLE"].append(link["TITLE"])
+#         dict_output["URL"].append(link["URL"])
+#         dict_output["HASTAG"].append(link["HASTAG"])
+#         dict_output["PUBDATE"].append(link["PUBDATE"])
+#
+# print (dict_output)
+# for d in l:
+#     if d not in l2:
+#         l2.append(d)
+
+
+
+# def twitter_dict(dictionary):
+#     dict_publish = {"TITLE": [], "PUBDATE": []}
+#     hours = 30
+#     for a in dictionary:
+#         hours += 30
+#         add_time = datetime.timedelta(minutes =hours)
+#         new_time = date_obj + add_time
+#         time_to_publish = datetime.datetime.strftime(new_time, "%H:%M:%S")
+#         dict_publish["TITLE"].append(twitter_message(a["TITLE"], a["URL"], a["HASTAG"]))
+#         dict_publish["PUBDATE"].append(time_to_publish)
+#     final_publish = sorted([{"TITLE": s, "PUBDATE": t} for s, t in
+#                             zip(dict_publish["TITLE"], dict_publish["PUBDATE"])],
+#                            key=itemgetter('PUBDATE'), reverse=False)
+#     return final_publish
 
 
 # def main():
@@ -126,6 +162,8 @@ def twitter_dict(dictionary):
 #         "https://news.google.com/rss/search?q=food+blockchain+agriculture+blockchain+when:1d&hl=en-US&gl=US&ceid=US:en")
 #     link_food = feed_food.creating_data()
 #     twitter_dict(link_food)
-#     print(twitter_dict(link_food))
+#     return print(twitter_dict(link_food))
 
 
+# if __name__ == '__main__':
+#     main()
