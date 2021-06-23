@@ -151,10 +151,11 @@ class TweetPreparion(ParseFeed):
 
 def twitter_message(title, url, hashtag):
     # print("Creating message for ", title, url, hashtag)
-    message = f"{title} at {s.tinyurl.short(url)} {hashtag}"
+    title_clean = title.replace('.', '')
+    message = f"{title_clean} at {s.tinyurl.short(url)} {hashtag}"
 
     if len(title) >= 200:
-        title_redux = title[:150]
+        title_redux = title_clean[:150]
         # print("title_redux")
         # create_mesage = f"{title_redux} at {s.tinyurl.short(url)} {hashtag}"
         message = f"{title_redux} at {s.tinyurl.short(url)} {hashtag}"
