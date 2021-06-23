@@ -6,7 +6,11 @@
 #     twitter_dict(link_food)
 #     print(twitter_dict(link_food))
 
+from tweet_post import twitter_post
 
+def main():
+    twitter_post
+    return twitter_post
 
 if __name__ == '__main__':
     main()

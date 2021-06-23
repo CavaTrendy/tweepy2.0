@@ -1,6 +1,6 @@
 import tweepy
 import os
-from feeds_post import TweetPreparion, twitter_dict
+from feeds_post import main_post
 import time
 import datetime
 
@@ -14,21 +14,20 @@ auth.set_access_token(access_token, access_token_secret)
 
 api = tweepy.API(auth)
 
-def twitter_post ():
-    dict_published = {"TITLE": [], "REALPUBDATE": []}
-    feed_food = TweetPreparion(
-        "https://news.google.com/rss/search?q=food+blockchain+agriculture+blockchain+when:1d&hl=en-US&gl=US&ceid=US:en")
-    link_food = feed_food.creating_data()
-    print(len(twitter_dict(link_food)))
+# def twitter_post ():
+#     post = main_post()
+#     for message in post:
+#         print(message["TITLE"])
+#         api.update_status(message["TITLE"])
+#         time.sleep(1800)
 
-    # while len(twitter_dict(link_food))>0:
-    #     print(len(twitter_dict(link_food)))
 
-        # for message in twitter_dict(link_food):
-        #     api.update_status(message)
-        #     time_published = datetime.datetime.timestamp(datetime.now())
-        #     dict_published["TITLE"].append(message["TITLE"])
-        #     dict_published["REALPUBDATE"].append(time_published)
-        #     time.sleep(1800)
 
-print(twitter_post())
+
+
+if __name__ == '__main__':
+    post = main_post()
+    for message in post:
+        print(message["TITLE"])
+        api.update_status(message["TITLE"])
+        time.sleep(1800)
