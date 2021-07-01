@@ -19,14 +19,20 @@ post = main_post()
 
 def twitter_message(text):
     return api.update_status(text)
-has_items = bool(post)
 
-while has_items  == True:
-    print(post)
 
+while len(post) > 0:
+    print("Still elements? ", len(post))
     for item in post:
+        posting = twitter_message(item["TITLE"])
+        # posting = item["TITLE"]
+        time.sleep(3600)
+
         element = post.remove(item)
         print('The popped element is:', element)
-    print('The dictionary is:', post)
-    break
+        print('The dictionary is:', post)
+    if len(post) == 0 :
+        print("Still elements? ", len(post))
+        break
+
 
