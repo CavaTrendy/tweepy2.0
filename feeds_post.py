@@ -8,8 +8,7 @@ import os
 API_TINY = os.getenv("API_KEY_TINY")
 
 date_obj = datetime.datetime.now()
-s = Shortener(api_key= API_TINY)
-
+s = Shortener(api_key=API_TINY)
 
 
 class ParseFeed():
@@ -50,20 +49,6 @@ class TweetPreparion(ParseFeed):
     def cleaning_link(self):
         new_dictionary = {"TITLE": [], "URL": [], "PUBDATE": []}
         for data in ParseFeed.parse(self):
-            # ###imposto la timezone gmt
-            # tz_GMT = pytz.timezone('GMT')
-            # date_obj = datetime.now(tz_GMT).strftime("%a, %d %b %Y %H:%M:%S")
-            # ##pulisco la data di input
-            # # strip_gmt = data["PUBDATE"].rstrip(" GMT")
-            # # setto uguale le date
-            # data_pub = datetime.strptime(strip_gmt, "%a, %d %b %Y %H:%M:%S")
-            # new_date = datetime.strptime(date_obj, "%a, %d %b %Y %H:%M:%S")
-            # if (new_date - data_pub).days <= 1 :
-            # print("superiorie " + str(data_pub))
-            # students = ('Agric', 'Food', 'AGRIC', 'FOOD', 'agric', 'food')
-            # for words in data:
-            #     if all(words in new_dictionary["TITLE"] for words in students):
-            #
             new_dictionary["TITLE"].append(data["TITLE"])
             new_dictionary["URL"].append(data["URL"])
             # new_dictionary["DESCR"].append(data["DESCR"])
@@ -85,11 +70,10 @@ class TweetPreparion(ParseFeed):
                     dict_input["HASTAG"].append("#foodtech #agritech #blockchain #innovation")
                     dict_input["PUBDATE"].append(i["PUBDATE"])
 
-        final_data = sorted([{"TITLE": s, "URL": t, "HASTAG": l, "PUBDATE": p} for s, t, l,p in
-                               zip(dict_input["TITLE"], dict_input["URL"], dict_input["HASTAG"], dict_input["PUBDATE"])],
-                              key=itemgetter('PUBDATE'), reverse=True)
+        final_data = sorted([{"TITLE": s, "URL": t, "HASTAG": l, "PUBDATE": p} for s, t, l, p in
+                             zip(dict_input["TITLE"], dict_input["URL"], dict_input["HASTAG"], dict_input["PUBDATE"])],
+                            key=itemgetter('PUBDATE'), reverse=True)
         return final_data
-
 
     def cleaning_double(self):
         dict_output = {"TITLE": [], "URL": [], "HASTAG": [], "PUBDATE": []}
@@ -102,52 +86,10 @@ class TweetPreparion(ParseFeed):
                 dict_output["PUBDATE"].append(link["PUBDATE"])
 
         final_output = sorted([{"TITLE": s, "URL": t, "HASTAG": l, "PUBDATE": p} for s, t, l, p in
-                             zip(dict_output["TITLE"], dict_output["URL"], dict_output["HASTAG"], dict_output["PUBDATE"])],
-                            key=itemgetter('PUBDATE'), reverse=True)
+                               zip(dict_output["TITLE"], dict_output["URL"], dict_output["HASTAG"],
+                                   dict_output["PUBDATE"])],
+                              key=itemgetter('PUBDATE'), reverse=True)
         return final_output
-
-
-# class TweetMessage(TweetPreparion):
-#
-#     def __init__(self, url):
-#         super().__init__(url)
-#
-#     def twitter_message(self, title, url, hashtag):
-#         # print("Creating message for ", title, url, hashtag)
-#         message = f"{title} at {s.tinyurl.short(url)} {hashtag}"
-#
-#         if len(title) >= 200:
-#             title_redux = title[:150]
-#             print("title_redux")
-#             # create_mesage = f"{title_redux} at {s.tinyurl.short(url)} {hashtag}"
-#             message = f"{title_redux} at {s.tinyurl.short(url)} {hashtag}"
-#             print(message)
-#         else:
-#             message
-#         return message
-#
-#     def twitter_dict(self, dictionary):
-#         dict_publish = {"TITLE": [], "PUBDATE": []}
-#         hours = 30
-#         for a in dictionary:
-#             hours += 30
-#             add_time = datetime.timedelta(minutes =hours)
-#             new_time = date_obj + add_time
-#             time_to_publish = datetime.datetime.strftime(new_time, "%H:%M:%S")
-#             dict_publish["TITLE"].append(twitter_message(a["TITLE"], a["URL"], a["HASTAG"]))
-#             dict_publish["PUBDATE"].append(time_to_publish)
-#         final_publish = sorted([{"TITLE": s, "PUBDATE": t} for s, t in
-#                                 zip(dict_publish["TITLE"], dict_publish["PUBDATE"])],
-#                                key=itemgetter('PUBDATE'), reverse=False)
-#         return final_publish
-
-
-# feed_food = TweetPreparion("https://news.google.com/rss/search?q=food+blockchain+agriculture+blockchain+when:1d&hl=en-US&gl=US&ceid=US:en")
-# link_food = feed_food.creating_data()
-# link = feed_food.cleaning_double()
-# print(link)
-# print(link_food)
-
 
 def twitter_message(title, url, hashtag):
     # print("Creating message for ", title, url, hashtag)
@@ -156,27 +98,18 @@ def twitter_message(title, url, hashtag):
 
     if len(title) >= 200:
         title_redux = title_clean[:150]
-        # print("title_redux")
-        # create_mesage = f"{title_redux} at {s.tinyurl.short(url)} {hashtag}"
         message = f"{title_redux} at {s.tinyurl.short(url)} {hashtag}"
-        # print(message)
     else:
         message
     return message
 
+
 def twitter_dict(dictionary):
-    dict_publish = {"TITLE": [], "PUBDATE": []}
-    hours = 30
+    dict_publish = {"TITLE": []}
     for a in dictionary:
-        hours += 30
-        add_time = datetime.timedelta(minutes =hours)
-        new_time = date_obj + add_time
-        time_to_publish = datetime.datetime.strftime(new_time, "%H:%M:%S")
         dict_publish["TITLE"].append(twitter_message(a["TITLE"], a["URL"], a["HASTAG"]))
-        dict_publish["PUBDATE"].append(time_to_publish)
-    final_publish = sorted([{"TITLE": s, "PUBDATE": t} for s, t in
-                            zip(dict_publish["TITLE"], dict_publish["PUBDATE"])],
-                           key=itemgetter('PUBDATE'), reverse=False)
+
+    final_publish = [{"TITLE": s} for s in dict_publish["TITLE"]]
     return final_publish
 
 
@@ -187,6 +120,3 @@ def main_post():
     post = twitter_dict(link_food)
     return post
 
-
-# if __name__ == '__main__':
-#     main_post()

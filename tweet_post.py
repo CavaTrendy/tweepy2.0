@@ -15,42 +15,18 @@ auth.set_access_token(access_token, access_token_secret)
 
 api = tweepy.API(auth)
 post = main_post()
-len_post = len(post)
 
-def twitter_check():
-    twitter_title = {"TITLE": []}
-    for status in tweepy.Cursor(api.user_timeline, screen_name='@CavaTrendy', tweet_mode="extended").items(
-            len_post + 1):
-        title_redux = status.full_text
-        twitter_title["TITLE"].append(title_redux)
-    for message in post:
-        # print(message["TITLE"])
-        if message["TITLE"] in twitter_title["TITLE"]:
-            print("in")
-        else:
-            new_message = message["TITLE"]
-    return new_message
 
 def twitter_message(text):
     return api.update_status(text)
+has_items = bool(post)
 
-# print(twitter_check())
+while has_items  == True:
+    print(post)
 
+    for item in post:
+        element = post.remove(item)
+        print('The popped element is:', element)
+    print('The dictionary is:', post)
+    break
 
-count = 0
-while count <= len_post:
-    try:
-        twitter_message(twitter_check())
-        count +=1
-        print(count)
-        time.sleep(1800)
-    except tweepy.error.TweepError:
-        print("error")
-
-
-# if __name__ == '__main__':
-#     post = main_post()
-#     for message in post:
-#         print(message["TITLE"])
-#         api.update_status(message["TITLE"])
-#         # time.sleep(1800)
