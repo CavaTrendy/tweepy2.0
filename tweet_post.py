@@ -27,17 +27,20 @@ def calculate_posting_time(time):
         to_time = 2000
     return to_time
 
+
+
 with open('db.csv', newline='') as db_file:
     reader = csv.DictReader(db_file)
     for row in reader:
         if row["POSTED"] == "YES":
             print("posted")
+            sys.exit()
         else:
             print("not_posted")
             while len(post) > 0:
                 print("Still elements? ", len(post))
                 for item in post:
-                    calculate_posting_time(len(post))
+                    # calculate_posting_time(len(post))
                     # posting = twitter_message(item["TITLE"])
                     posting = item["TITLE"]
                     print(calculate_posting_time(len(post)))
