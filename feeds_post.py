@@ -4,6 +4,7 @@ import datetime
 from operator import itemgetter
 from pyshorteners import Shortener
 import os
+import csv
 
 API_TINY = os.getenv("API_KEY_TINY")
 
@@ -79,7 +80,7 @@ class TweetPreparion(ParseFeed):
         dict_output = {"TITLE": [], "URL": [], "HASTAG": [], "PUBDATE": []}
         for link in self.creating_data():
             # print(link["TITLE"])
-            if link["TITLE"] not in dict_output["TITLE"]:
+            if link["TITLE"] not in dict_output["TITLE"] or link["URL"] not in dict_output["URL"]:
                 dict_output["TITLE"].append(link["TITLE"])
                 dict_output["URL"].append(link["URL"])
                 dict_output["HASTAG"].append(link["HASTAG"])
@@ -91,14 +92,17 @@ class TweetPreparion(ParseFeed):
                               key=itemgetter('PUBDATE'), reverse=True)
         return final_output
 
+
 def twitter_message(title, url, hashtag):
     # print("Creating message for ", title, url, hashtag)
     title_clean = title.replace('.', '')
-    message = f"{title_clean} at {s.tinyurl.short(url)} {hashtag}"
+    # message = f"{title_clean} at {s.tinyurl.short(url)} {hashtag}"
+    message = f"{title_clean} at {url} {hashtag}"
 
     if len(title) >= 200:
         title_redux = title_clean[:150]
-        message = f"{title_redux} at {s.tinyurl.short(url)} {hashtag}"
+        # message = f"{title_redux} at {s.tinyurl.short(url)} {hashtag}"
+        message = f"{title_clean} at {url} {hashtag}"
     else:
         message
     return message
@@ -119,4 +123,27 @@ def main_post():
     link_food = feed_food.cleaning_double()
     post = twitter_dict(link_food)
     return post
+
+
+try:
+    with open('db.csv', newline='') as db_file:
+        reader = csv.DictReader(db_file)
+        for row in reader:
+            if row["POSTED"] == "YES":
+                print("posted")
+            else:
+                print("not_posted")
+                with open('db.csv', 'w', newline='') as csv_file:
+                    fieldnames = ['TWEET', "POSTED"]
+                    writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+                    writer.writeheader()
+                    for p in main_post():
+                        writer.writerow({'TWEET': p["TITLE"], "POSTED": ""})
+except FileNotFoundError:
+    with open('db.csv', 'w', newline='') as csv_file:
+        fieldnames = ['TWEET', "POSTED"]
+        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+        writer.writeheader()
+        for p in main_post():
+            writer.writerow({'TWEET': p["TITLE"], "POSTED": ""})
 
