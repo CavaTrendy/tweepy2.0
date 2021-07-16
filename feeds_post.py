@@ -1,7 +1,6 @@
 import sys
 
 import feedparser
-import b
 from bs4 import BeautifulSoup
 import datetime
 from operator import itemgetter
