@@ -5,12 +5,16 @@
 #     link_food = feed_food.creating_data()
 #     twitter_dict(link_food)
 #     print(twitter_dict(link_food))
+import time
+from feeds_post import main_post
+from tweet_post import main_posting
 
-from tweet_post import twitter_post
 
 def main():
-    twitter_post
-    return twitter_post
+    main_post
+    time.sleep(30)
+    main_posting
+
 
 if __name__ == '__main__':
     main()

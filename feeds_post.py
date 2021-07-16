@@ -124,28 +124,29 @@ def main_post():
         "https://news.google.com/rss/search?q=food+blockchain+agriculture+blockchain+when:1d&hl=en-US&gl=US&ceid=US:en")
     link_food = feed_food.cleaning_double()
     post = twitter_dict(link_food)
+    try:
+        with open('db.csv', newline='') as db_file:
+            reader = csv.DictReader(db_file)
+            for row in reader:
+                if row["POSTED"] == "YES":
+                    print("posted")
+                else:
+                    print("not_posted")
+                    with open('db.csv', 'w', newline='') as csv_file:
+                        fieldnames = ['TWEET', "POSTED"]
+                        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+                        writer.writeheader()
+                        for p in main_post():
+                            writer.writerow({'TWEET': p["TITLE"], "POSTED": ""})
+    except FileNotFoundError:
+        with open('db.csv', 'w', newline='') as csv_file:
+            fieldnames = ['TWEET', "POSTED"]
+            writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+            writer.writeheader()
+            for p in main_post():
+                writer.writerow({'TWEET': p["TITLE"], "POSTED": ""})
     return post
 
 
-try:
-    with open('db.csv', newline='') as db_file:
-        reader = csv.DictReader(db_file)
-        for row in reader:
-            if row["POSTED"] == "YES":
-                print("posted")
-            else:
-                print("not_posted")
-                with open('db.csv', 'w', newline='') as csv_file:
-                    fieldnames = ['TWEET', "POSTED"]
-                    writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
-                    writer.writeheader()
-                    for p in main_post():
-                        writer.writerow({'TWEET': p["TITLE"], "POSTED": ""})
-except FileNotFoundError:
-    with open('db.csv', 'w', newline='') as csv_file:
-        fieldnames = ['TWEET', "POSTED"]
-        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
-        writer.writeheader()
-        for p in main_post():
-            writer.writerow({'TWEET': p["TITLE"], "POSTED": ""})
+
 
