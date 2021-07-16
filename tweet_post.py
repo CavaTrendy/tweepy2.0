@@ -56,5 +56,6 @@ with open('db.csv', newline='') as db_file:
                     print('The dictionary is:', post)
             if len(post) == 0:
                 print("Still elements? ", len(post))
-                sys.exit()
+                # sys.exit()
+                SystemExit
                 break
