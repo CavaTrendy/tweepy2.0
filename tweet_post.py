@@ -32,33 +32,25 @@ def calculate_posting_time(time):
 def main_posting():
     with open('db.csv', newline='') as db_file:
         reader = csv.DictReader(db_file)
-        for row in reader:
-            if row["POSTED"] == "YES":
-                print("posted")
-                sys.exit()
-            else:
-                print("not_posted")
-                while len(post) > 0:
-                    print("Still elements? ", len(post))
-                    for item in post:
-                        # calculate_posting_time(len(post))
-                        # posting = twitter_message(item["TITLE"])
-                        posting = item["TITLE"]
-                        print(calculate_posting_time(len(post)))
-                        with open('db.csv', 'w') as csv_writting:
-                            fieldnames = ['TWEET', "POSTED"]
-                            writer = csv.DictWriter(csv_writting, fieldnames=fieldnames)
-                            writer.writeheader()
-                            for p in main_post():
-                                writer.writerow({'TWEET': p["TITLE"], "POSTED": "YES"})
 
-                        element = post.remove(item)
-                        print('The popped element is:', element)
-                        print('The dictionary is:', post)
-                if len(post) == 0:
-                    print("Still elements? ", len(post))
-                    # sys.exit()
-                    SystemExit
-                    break
+        while len(post) > 0:
+            print("Still elements? ", len(post))
+            for item in post:
+                # calculate_posting_time(len(post))
+                # posting = twitter_message(item["TITLE"])
+                posting = item["TITLE"]
+                print(calculate_posting_time(len(post)))
+                with open('db.csv', 'w') as csv_writting:
+                    fieldnames = ['TWEET', "POSTED"]
+                    writer = csv.DictWriter(csv_writting, fieldnames=fieldnames)
+                    writer.writeheader()
+                    for p in main_post():
+                        writer.writerow({'TWEET': p["TITLE"], "POSTED": "YES"})
+
+                element = post.remove(item)
+                print('The popped element is:', element)
+                print('The dictionary is:', post)
+        if len(post) == 0:
+            print("Still elements? ", len(post))
 
 

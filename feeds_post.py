@@ -1,5 +1,3 @@
-import sys
-
 import feedparser
 from bs4 import BeautifulSoup
 import datetime
@@ -7,6 +5,7 @@ from operator import itemgetter
 from pyshorteners import Shortener
 import os
 import csv
+
 
 API_TINY = os.getenv("API_KEY_TINY")
 
@@ -64,7 +63,8 @@ class TweetPreparion(ParseFeed):
 
     def creating_data(self):
         dict_input = {"TITLE": [], "URL": [], "HASTAG": [], "PUBDATE": []}
-        students = ['Agric', 'Agriculture', 'Food', 'AGRIC', 'AGRICULTURE', 'FOOD', 'agric', 'agricultre', 'food']
+        students = ['Agric', 'Agriculture', 'Food', 'AGRIC', 'AGRICULTURE', 'FOOD', 'agric', 'agricultre', 'food',
+                    "Blockchain", "blockchain"]
         for i in self.cleaning_link():
             for j in students:
                 if j in i["TITLE"]:
@@ -82,7 +82,7 @@ class TweetPreparion(ParseFeed):
         dict_output = {"TITLE": [], "URL": [], "HASTAG": [], "PUBDATE": []}
         for link in self.creating_data():
             # print(link["TITLE"])
-            if link["TITLE"] not in dict_output["TITLE"] or link["URL"] not in dict_output["URL"]:
+            if link["TITLE"] not in dict_output["TITLE"]:  # or link["URL"] not in dict_output["URL"]:
                 dict_output["TITLE"].append(link["TITLE"])
                 dict_output["URL"].append(link["URL"])
                 dict_output["HASTAG"].append(link["HASTAG"])
@@ -124,29 +124,31 @@ def main_post():
         "https://news.google.com/rss/search?q=food+blockchain+agriculture+blockchain+when:1d&hl=en-US&gl=US&ceid=US:en")
     link_food = feed_food.cleaning_double()
     post = twitter_dict(link_food)
-    try:
-        with open('db.csv', newline='') as db_file:
-            reader = csv.DictReader(db_file)
-            for row in reader:
-                if row["POSTED"] == "YES":
-                    print("posted")
-                else:
-                    print("not_posted")
-                    with open('db.csv', 'w', newline='') as csv_file:
-                        fieldnames = ['TWEET', "POSTED"]
-                        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
-                        writer.writeheader()
-                        for p in main_post():
-                            writer.writerow({'TWEET': p["TITLE"], "POSTED": ""})
-    except FileNotFoundError:
-        with open('db.csv', 'w', newline='') as csv_file:
-            fieldnames = ['TWEET', "POSTED"]
-            writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
-            writer.writeheader()
-            for p in main_post():
-                writer.writerow({'TWEET': p["TITLE"], "POSTED": ""})
     return post
 
 
+if __name__ == '__main__':
+    # with open('db.csv', newline='') as db_file:
+    #     print("opening")
+    #     reader = csv.DictReader(db_file)
+    #     for item, row in zip(main_post(), reader):
+    #         if item["TITLE"]  in row["TITLE"]:
+    #             print("in", row["TWEET"])
+    #             print("not", item["TITLE"])
+    with open('db.csv', 'w') as csv_writting:
+        fieldnames = ['TITLE', "POSTED"]
+        writer = csv.DictWriter(csv_writting, fieldnames=fieldnames)
+        writer.writeheader()
+        for p in main_post():
+            writer.writerow({'TITLE': p["TITLE"]})
 
 
+
+
+# if item["TITLE"] not in row["TWEET"]:
+#     with open('db.csv', 'w', newline='') as csv_file:
+#         fieldnames = ['TWEET', "POSTED"]
+#         writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+#         writer.writeheader()
+#         for p in main_post():
+#             writer.writerow({'TWEET': p["TITLE"], "POSTED": ""})
