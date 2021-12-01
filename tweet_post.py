@@ -1,8 +1,6 @@
-import sys
 import tweepy
 import os
 import csv
-import time
 from feeds_post import main_post
 
 consumer_key = os.getenv("CONSUMER_KEY")
@@ -30,27 +28,19 @@ def calculate_posting_time(time):
 
 
 def main_posting():
-    with open('db.csv', newline='') as db_file:
-        reader = csv.DictReader(db_file)
+    print(post)
+    while len(post) > 0:
+        print("Still elements? ", len(post))
+        for item in post:
+            # calculate_posting_time(len(post))
+            posting = twitter_message(item["TITLE"])
+            # posting = item["TITLE"]
+            print(calculate_posting_time(len(post)))
+            element = post.remove(item)
+            print('The popped element is:', element)
+            print('The dictionary is:', post)
+    if len(post) == 0:
+        print("No Elements ", len(post))
 
-        while len(post) > 0:
-            print("Still elements? ", len(post))
-            for item in post:
-                # calculate_posting_time(len(post))
-                # posting = twitter_message(item["TITLE"])
-                posting = item["TITLE"]
-                print(calculate_posting_time(len(post)))
-                with open('db.csv', 'w') as csv_writting:
-                    fieldnames = ['TWEET', "POSTED"]
-                    writer = csv.DictWriter(csv_writting, fieldnames=fieldnames)
-                    writer.writeheader()
-                    for p in main_post():
-                        writer.writerow({'TWEET': p["TITLE"], "POSTED": "YES"})
-
-                element = post.remove(item)
-                print('The popped element is:', element)
-                print('The dictionary is:', post)
-        if len(post) == 0:
-            print("Still elements? ", len(post))
-
-
+if __name__ == '__main__':
+    main_posting()

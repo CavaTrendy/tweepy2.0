@@ -96,15 +96,15 @@ class TweetPreparion(ParseFeed):
 
 
 def twitter_message(title, url, hashtag):
-    # print("Creating message for ", title, url, hashtag)
+    print("Creating message for ", title, url, hashtag)
     title_clean = title.replace('.', '')
-    # message = f"{title_clean} at {s.tinyurl.short(url)} {hashtag}"
-    message = f"{title_clean} at {url} {hashtag}"
+    message = f"{title_clean} at {s.tinyurl.short(url)} {hashtag}"
+    # message = f"{title_clean} at {url} {hashtag}"
 
     if len(title) >= 200:
         title_redux = title_clean[:150]
-        # message = f"{title_redux} at {s.tinyurl.short(url)} {hashtag}"
-        message = f"{title_clean} at {url} {hashtag}"
+        message = f"{title_redux} at {s.tinyurl.short(url)} {hashtag}"
+        # message = f"{title_clean} at {url} {hashtag}"
     else:
         message
     return message
@@ -127,28 +127,4 @@ def main_post():
     return post
 
 
-if __name__ == '__main__':
-    # with open('db.csv', newline='') as db_file:
-    #     print("opening")
-    #     reader = csv.DictReader(db_file)
-    #     for item, row in zip(main_post(), reader):
-    #         if item["TITLE"]  in row["TITLE"]:
-    #             print("in", row["TWEET"])
-    #             print("not", item["TITLE"])
-    with open('db.csv', 'w') as csv_writting:
-        fieldnames = ['TITLE', "POSTED"]
-        writer = csv.DictWriter(csv_writting, fieldnames=fieldnames)
-        writer.writeheader()
-        for p in main_post():
-            writer.writerow({'TITLE': p["TITLE"]})
 
-
-
-
-# if item["TITLE"] not in row["TWEET"]:
-#     with open('db.csv', 'w', newline='') as csv_file:
-#         fieldnames = ['TWEET', "POSTED"]
-#         writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
-#         writer.writeheader()
-#         for p in main_post():
-#             writer.writerow({'TWEET': p["TITLE"], "POSTED": ""})
