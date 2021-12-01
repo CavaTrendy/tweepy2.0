@@ -1,6 +1,5 @@
 import tweepy
 import os
-import csv
 from feeds_post import main_post
 
 consumer_key = os.getenv("CONSUMER_KEY")
@@ -41,6 +40,5 @@ def main_posting():
             print('The dictionary is:', post)
     if len(post) == 0:
         print("No Elements ", len(post))
+    return posting
 
-if __name__ == '__main__':
-    main_posting()
