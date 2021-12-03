@@ -44,5 +44,5 @@ def main_posting():
             print('Time: ', calculate_posting_time(len(post)))
     if len(post) == 0:
         print("No Elements ", len(post))
-    # return posting
+    return posting
 
