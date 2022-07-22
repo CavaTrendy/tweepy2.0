@@ -4,7 +4,7 @@ import datetime
 from operator import itemgetter
 from pyshorteners import Shortener
 import os
-import csv
+import xlsxwriter
 
 
 API_TINY = os.getenv("API_KEY_TINY")
@@ -135,12 +135,22 @@ if __name__ == '__main__':
     #         if item["TITLE"]  in row["TITLE"]:
     #             print("in", row["TWEET"])
     #             print("not", item["TITLE"])
-    with open('db.csv', 'w') as csv_writting:
-        fieldnames = ['TITLE', "POSTED"]
-        writer = csv.DictWriter(csv_writting, fieldnames=fieldnames)
-        writer.writeheader()
-        for p in main_post():
-            writer.writerow({'TITLE': p["TITLE"]})
+    workbook = xlsxwriter.Workbook('db.xlsx')
+    worksheet = workbook.add_worksheet()
+    for row_num, row_data in enumerate(main_post()):
+        for col_num, col_data in enumerate(row_data):
+            for data in enumerate(col_data):
+                worksheet.write(row_num, col_num, data)
+
+    workbook.close()
+
+    # workbook.close()
+    # with open('db.csv', 'w') as csv_writting:
+    #     fieldnames = ['TITLE', "POSTED"]
+    #     writer = csv.DictWriter(csv_writting, fieldnames=fieldnames)
+    #     writer.writeheader()
+    #     for p in main_post():
+    #         writer.writerow({'TITLE': p["TITLE"]})
 
 
 
